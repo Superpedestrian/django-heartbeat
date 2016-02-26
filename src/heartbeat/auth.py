@@ -16,7 +16,8 @@ def auth(func):
             ip = get_client_ip(request)
             if ip in auth['authorized_ips']:
                 return func(request, *args, **kwargs)
-
+        if auth.get('disable', False):
+            return func(request, *args, **kwargs)
         prepare_credentials(auth)
         if request.META.get('HTTP_AUTHORIZATION'):
             authmeth, auth = request.META['HTTP_AUTHORIZATION'].split(' ')
